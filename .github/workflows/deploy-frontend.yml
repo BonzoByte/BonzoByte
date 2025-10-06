@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'apps/BonzoByte.Frontend/**'
+      - 'BonzoByte.Frontend/**'
   workflow_dispatch:
 
 permissions:
@@ -14,7 +14,7 @@ permissions:
 
 concurrency:
   group: 'pages'
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -25,39 +25,42 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: 'apps/BonzoByte.Frontend/package-lock.json'
+
+      - name: List repo (debug)
+        run: |
+          pwd
+          ls -la
+          echo "---- BonzoByte.Frontend ----"
+          ls -la BonzoByte.Frontend || true
 
       - name: Install deps
-        working-directory: apps/BonzoByte.Frontend
+        working-directory: BonzoByte.Frontend
         run: npm ci
 
-      # ⬇️ Build u fiksni folder da nema dilema
-      - name: Build Angular (project pages)
-        working-directory: apps/BonzoByte.Frontend
+      # Ako build traži ime projekta, zamijeni naredbu ispod sa:
+      # npx ng build BonzoByte.Frontend --configuration production --base-href "/BonzoByte/" --deploy-url "/BonzoByte/" --output-path dist/site
+      - name: Build Angular
+        working-directory: BonzoByte.Frontend
         run: npx ng build --configuration production --base-href "/BonzoByte/" --deploy-url "/BonzoByte/" --output-path dist/site
 
-      # SPA fallback
-      - name: Add 404 fallback
-        working-directory: apps/BonzoByte.Frontend
+      - name: SPA 404 fallback
+        working-directory: BonzoByte.Frontend
         run: cp dist/site/index.html dist/site/404.html
 
-      # Debug listing (vidi se u logu)
-      - name: List output
-        working-directory: apps/BonzoByte.Frontend
+      - name: List output (debug)
+        working-directory: BonzoByte.Frontend
         run: ls -la dist/site
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/BonzoByte.Frontend/dist/site
+          path: BonzoByte.Frontend/dist/site
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4

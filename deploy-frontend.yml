@@ -26,8 +26,7 @@ jobs:
         with:
           node-version: '20'
 
-      # Debug: pokaži strukturu da budemo sigurni u put
-      - name: List repo
+      - name: List repo (debug)
         run: |
           pwd
           ls -la
@@ -40,15 +39,15 @@ jobs:
 
       # Ako build traži ime projekta, zamijeni naredbu ispod sa:
       # npx ng build BonzoByte.Frontend --configuration production --base-href "/BonzoByte/" --deploy-url "/BonzoByte/" --output-path dist/site
-      - name: Build Angular (project pages)
+      - name: Build Angular
         working-directory: BonzoByte.Frontend
         run: npx ng build --configuration production --base-href "/BonzoByte/" --deploy-url "/BonzoByte/" --output-path dist/site
 
-      - name: Add 404 fallback
+      - name: SPA 404 fallback
         working-directory: BonzoByte.Frontend
         run: cp dist/site/index.html dist/site/404.html
 
-      - name: List output
+      - name: List output (debug)
         working-directory: BonzoByte.Frontend
         run: ls -la dist/site
 
@@ -62,7 +61,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
