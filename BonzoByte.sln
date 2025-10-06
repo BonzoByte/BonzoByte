@@ -1,0 +1,149 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36203.30
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonzoByte.Core", "BonzoByte.Core\BonzoByte.Core.csproj", "{EB41DFF1-0262-4974-B32A-88200803E532}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BonzoByte.Frontend", "BonzoByte.Frontend\", "{27586E19-B355-95A8-4FE7-8CE784CC5308}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_51274"
+		Debug.AspNetCompiler.PhysicalPath = "BonzoByte.Frontend\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_51274\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_51274"
+		Release.AspNetCompiler.PhysicalPath = "BonzoByte.Frontend\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_51274\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "51274"
+		SlnRelativePath = "BonzoByte.Frontend\"
+	EndProjectSection
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BonzoByte.Backend", "BonzoByte.Backend\", "{49553D71-F59C-C994-5A65-E9FD907BC6F2}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_51275"
+		Debug.AspNetCompiler.PhysicalPath = "BonzoByte.Backend\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_51275\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_51275"
+		Release.AspNetCompiler.PhysicalPath = "BonzoByte.Backend\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_51275\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "51275"
+		SlnRelativePath = "BonzoByte.Backend\"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonzoByte.Skills", "C:\Users\Stanko\source\repos\BonzoByte\BonzoByte.Skills\BonzoByte.Skills.csproj", "{15AD1345-984C-48ED-AF9A-2EAB44E5AA2B}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BonzoByte.SHAP", "C:\Users\Stanko\source\repos\BonzoByte\BonzoByte.SHAP\BonzoByte.SHAP.pyproj", "{5936796C-E498-4C60-944D-6142E6DCC70C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonzoByte.NN", "BonzoByte.NN\BonzoByte.NN.csproj", "{C4000BDC-7832-451A-AAE2-9D69FFD415C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonzoByte.Score", "BonzoByte.Score\BonzoByte.Score.csproj", "{98354B5E-CCC0-4ACD-B144-4A42001B4414}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonzoByte.ML", "BonzoByte.ML\BonzoByte.ML.csproj", "{99FA27EA-252D-4C43-A73F-0A2ECD70AE3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonzoByte.MarkowsChains", "BonzoByte.MarkowsChains\BonzoByte.MarkowsChains.csproj", "{8FD4BCF8-893D-4150-A1FE-E8584B4F415F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apps", "apps", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{1B3CFB24-3333-4105-8F72-6F3D65E36A87}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "models", "models", "{56A4C4EA-14EC-46D3-9893-AE79DF5548B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{A219C392-376C-4D47-AD9D-C34D7CACC30D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonzoByte.BatchScore", "BonzoByte.BatchScore\BonzoByte.BatchScore.csproj", "{46792A83-CE65-4670-A07E-C42D2A23EF77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonzoByte.BrotliNNRefresher", "BonzoByte.BrotliNNRefresher\BonzoByte.BrotliNNRefresher.csproj", "{4F50EB46-06F5-4712-A0BF-CC06897230E5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB41DFF1-0262-4974-B32A-88200803E532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB41DFF1-0262-4974-B32A-88200803E532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB41DFF1-0262-4974-B32A-88200803E532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB41DFF1-0262-4974-B32A-88200803E532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27586E19-B355-95A8-4FE7-8CE784CC5308}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27586E19-B355-95A8-4FE7-8CE784CC5308}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27586E19-B355-95A8-4FE7-8CE784CC5308}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{27586E19-B355-95A8-4FE7-8CE784CC5308}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{49553D71-F59C-C994-5A65-E9FD907BC6F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49553D71-F59C-C994-5A65-E9FD907BC6F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49553D71-F59C-C994-5A65-E9FD907BC6F2}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{49553D71-F59C-C994-5A65-E9FD907BC6F2}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{15AD1345-984C-48ED-AF9A-2EAB44E5AA2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15AD1345-984C-48ED-AF9A-2EAB44E5AA2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15AD1345-984C-48ED-AF9A-2EAB44E5AA2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15AD1345-984C-48ED-AF9A-2EAB44E5AA2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5936796C-E498-4C60-944D-6142E6DCC70C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5936796C-E498-4C60-944D-6142E6DCC70C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4000BDC-7832-451A-AAE2-9D69FFD415C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4000BDC-7832-451A-AAE2-9D69FFD415C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4000BDC-7832-451A-AAE2-9D69FFD415C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4000BDC-7832-451A-AAE2-9D69FFD415C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98354B5E-CCC0-4ACD-B144-4A42001B4414}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98354B5E-CCC0-4ACD-B144-4A42001B4414}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98354B5E-CCC0-4ACD-B144-4A42001B4414}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98354B5E-CCC0-4ACD-B144-4A42001B4414}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99FA27EA-252D-4C43-A73F-0A2ECD70AE3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99FA27EA-252D-4C43-A73F-0A2ECD70AE3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99FA27EA-252D-4C43-A73F-0A2ECD70AE3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99FA27EA-252D-4C43-A73F-0A2ECD70AE3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FD4BCF8-893D-4150-A1FE-E8584B4F415F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FD4BCF8-893D-4150-A1FE-E8584B4F415F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FD4BCF8-893D-4150-A1FE-E8584B4F415F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD4BCF8-893D-4150-A1FE-E8584B4F415F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46792A83-CE65-4670-A07E-C42D2A23EF77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46792A83-CE65-4670-A07E-C42D2A23EF77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46792A83-CE65-4670-A07E-C42D2A23EF77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46792A83-CE65-4670-A07E-C42D2A23EF77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F50EB46-06F5-4712-A0BF-CC06897230E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F50EB46-06F5-4712-A0BF-CC06897230E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F50EB46-06F5-4712-A0BF-CC06897230E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F50EB46-06F5-4712-A0BF-CC06897230E5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EB41DFF1-0262-4974-B32A-88200803E532} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{27586E19-B355-95A8-4FE7-8CE784CC5308} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{49553D71-F59C-C994-5A65-E9FD907BC6F2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{15AD1345-984C-48ED-AF9A-2EAB44E5AA2B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{5936796C-E498-4C60-944D-6142E6DCC70C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C4000BDC-7832-451A-AAE2-9D69FFD415C2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{98354B5E-CCC0-4ACD-B144-4A42001B4414} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{99FA27EA-252D-4C43-A73F-0A2ECD70AE3F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{8FD4BCF8-893D-4150-A1FE-E8584B4F415F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{56A4C4EA-14EC-46D3-9893-AE79DF5548B8} = {1B3CFB24-3333-4105-8F72-6F3D65E36A87}
+		{A219C392-376C-4D47-AD9D-C34D7CACC30D} = {1B3CFB24-3333-4105-8F72-6F3D65E36A87}
+		{46792A83-CE65-4670-A07E-C42D2A23EF77} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{4F50EB46-06F5-4712-A0BF-CC06897230E5} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {91D237B2-9029-4132-8581-24B71D388F55}
+	EndGlobalSection
+EndGlobal

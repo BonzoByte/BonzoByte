@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Extensions\**" />
+    <None Remove="**\*.br" />
+    <None Remove="**\*.7z" />
+    <None Remove="**\*.html" />
+    <Content Remove="**\*.br" />
+    <Content Remove="**\*.7z" />
+    <Content Remove="**\*.html" />
+    <None Remove="..\BonzoByte.Backend\data\**" />
+    <None Remove="Extensions\**" />
+    <Content Remove="..\BonzoByte.Backend\data\**" />
+    <EmbeddedResource Remove="Extensions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BrotliSharpLib" Version="0.3.3" />
+    <PackageReference Include="DeepCloner" Version="0.10.4" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    <PackageReference Include="MongoDB.Bson" Version="3.4.1" />
+    <PackageReference Include="NReco.Logging.File" Version="1.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Mappers\" />
+    <Folder Include="SQLScripts\InitialInsertIntoMatch\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BonzoByte.ML\BonzoByte.ML.csproj" />
+    <ProjectReference Include="C:\Users\Stanko\source\repos\BonzoByte\BonzoByte.Skills\BonzoByte.Skills.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

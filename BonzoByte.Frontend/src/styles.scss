@@ -1,0 +1,831 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+    --header-h: 56px;
+    --datebar-h: 40px; /* dosljedno ime */
+    --footer-h: 36px;
+    --top: calc(var(--header-h) + var(--datebar-h));
+    --sep: rgba(0,0,0,.12); /* blago */
+    --sep-strong: rgba(0,0,0,.18); /* malo jače */
+    /* lako mijenjamo kasnije na Inter/Roboto itd. */
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "DejaVu Sans Mono", monospace;
+    --font-size-base: 13px; /* kasnije podesimo */
+    --line-height-base: 1.1; /* gusto ali čitljivo */
+}
+
+/* Jedan vertikalni scroll + rezerve za fiksne trake */
+body {
+    padding-top: var(--top); /* header + date bar */
+    padding-bottom: var(--footer-h); /* footer */
+    overflow-y: auto;
+}
+
+app-root, app-layout, app-header, app-footer, main {
+    display: block;
+}
+
+/* Fiksni header gore */
+.custom-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    min-height: var(--header-h);
+    background: #fff;
+    z-index: 1000;
+    box-shadow: 0 1px 0 var(--sep-strong);
+}
+
+/* Fiksni footer dolje */
+.custom-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-height: var(--footer-h);
+    background: #fff;
+    z-index: 1000;
+    border-top: 1px solid var(--sep-strong);
+}
+
+/* Safety za donji sadržaj */
+main, .table-wrapper {
+    padding-bottom: var(--footer-h);
+    box-sizing: border-box;
+}
+
+/* Sticky thead ispod date bara */
+.match-table thead th {
+    position: sticky;
+    top: var(--top); /* = header + datebar */
+    background: #fff;
+    z-index: 5;
+    font-variant-numeric: tabular-nums lining-nums;
+    /* fallback za starije browsere */
+    font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* Traka datuma: fiksna ispod headera, preko cijele širine */
+.date-nav-sticky {
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    height: var(--datebar-h);
+    background: #fff;
+    z-index: 999; /* ispod headera, iznad sadržaja */
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* | lijevo | centar | desno | */
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 0 var(--sep);
+}
+
+/* centar: prev | date | next */
+.pagination-center-wrapper {
+    justify-self: center;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+/* desno: Filter */
+.date-right {
+    justify-self: end;
+}
+
+/* mali badge (bez bootstrap-a) */
+.badge-on {
+    font-size: 10px;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+/* sve ikone u date baru neka budu veličine teksta */
+.date-nav-sticky .icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle; /* poravnaj s linijom teksta */
+    display: inline-block;
+}
+
+/* ako želiš da je filter mrvu manji od 1em (npr. 0.9em) */
+.date-nav-sticky .icon-filter {
+    width: 0.9em;
+    height: 0.9em;
+}
+
+/* gumb da ne “diže” visinu bara */
+.date-nav-sticky .link-button {
+    background: none;
+    border: 0;
+    padding: 0;
+    line-height: 1; /* kompaktan, bez dodatnih margina */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.date-nav-sticky .arrow-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+/* Centriraj tablicu vodoravno */
+.table-wrapper {
+    display: flex;
+    justify-content: center;
+    /* malo zraka sa strane na uskim ekranima */
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+/* neka tablica ne bude 100% širine nego koliko treba */
+.match-table {
+    border-collapse: collapse;
+    width: auto; /* fallback */
+    max-width: 100%; /* ne izlazi iz ekrana */
+}
+
+.match-table th,
+.match-table td {
+    border-right: 1px solid var(--sep);
+    padding: 4px 8px; /* kompaktno; podešavaj po guštu */
+}
+
+.match-table th:first-child,
+.match-table td:first-child {
+    border-left: 1px solid var(--sep);
+}
+
+.match-table tr > *:last-child {
+    border-right: 1px solid var(--sep);
+}
+
+.match-table tbody tr {
+    border-bottom: 1px solid var(--sep);
+}
+
+/* (opcionalno) vrlo blaga zebra i hover */
+.match-table tbody tr:nth-child(odd) {
+    background: rgba(0,0,0,.015);
+}
+
+.match-table tbody tr:hover {
+    background: rgba(0,0,0,.08);
+}
+
+.percentage-cell,
+.odds-combined-cell {
+    font-family: var(--font-mono); /* savršeno poravnato */
+    letter-spacing: 0.02em; /* mrvu zraka, opcionalno */
+}
+
+@supports (width: fit-content) {
+    .match-table {
+        width: fit-content;
+    }
+    /* lijepo se suzi na sadržaj */
+}
+
+.match-table thead th {
+    /* već postojeća sticky svojstva ostaju */
+    border-bottom: none; /* makni tanku liniju */
+    box-shadow: inset 0 -2px 0 var(--sep-strong); /* puna, 2px, preko cijele ćelije */
+}
+
+/* Center: Type (2), Level (4), Surface (5), Result (8), Result Details (9) */
+.match-table th:nth-child(2),
+.match-table td:nth-child(2),
+.match-table th:nth-child(4),
+.match-table td:nth-child(4),
+.match-table th:nth-child(5),
+.match-table td:nth-child(5),
+.match-table th:nth-child(8),
+.match-table td:nth-child(8),
+.match-table th:nth-child(9),
+.match-table td:nth-child(9) {
+    text-align: center;
+    white-space: nowrap; /* ostaje kompaktno */
+    vertical-align: middle;
+}
+
+:root {
+    --row-even: rgba(0,0,0,.04); /* vrlo lagano sivo */
+    --row-odd: transparent; /* čisto bijelo */
+    --row-hover: rgba(0,0,0,.08); /* već imaš hover; izvučeno u var */
+}
+
+/* zebra: parni redovi lagano sivi, neparni čisti */
+.match-table tbody tr:nth-child(even) {
+    background: var(--row-even);
+}
+
+.match-table tbody tr:nth-child(odd) {
+    background: var(--row-odd);
+}
+
+/* hover ostaje jači od zebre */
+.match-table tbody tr:hover {
+    background: var(--row-hover);
+    transition: background-color .12s ease-in-out; /* glatko */
+}
+
+/* Tri-kolonski layout: lijevo broj (desno poravnat), u sredini crtica, desno broj (lijevo poravnat).
+   Širina lijevog/desnog polja je u "ch" (širina jedne znamenke) pa je decimalna točka poravnata. */
+.dual {
+    display: grid;
+    align-items: center;
+    column-gap: .6ch; /* mali razmak od crtice */
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* Odds: do 99.99 -> 5 znakova (2+dot+2) */
+.dual-odds {
+    grid-template-columns: 5ch auto 5ch;
+}
+
+/* Probability: do 100.00 -> 6 znakova (3+dot+2) */
+.dual-prob {
+    grid-template-columns: 6ch auto 6ch;
+}
+
+.dual .l {
+    text-align: right;
+}
+
+.dual .r {
+    text-align: left;
+}
+
+.dual .mid {
+    justify-self: center;
+    opacity: .8;
+}
+
+/* U tim ćelijama držimo monospace, bez dodatnog razmaka slova */
+.odds-combined-cell,
+.percentage-cell {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    letter-spacing: 0; /* pregazi 0.02em */
+    white-space: pre; /* ne kolabira razmake oko crtice */
+}
+
+/* Precizno poravnanje unutar odds/prob ćelija */
+.odds-combined-cell,
+.percentage-cell {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    letter-spacing: 0; /* pregazi eventualni spacing */
+    white-space: nowrap;
+}
+
+/* Tri kolone: lijevo | crtica | desno, jednake širine lijevo/desno */
+.dual {
+    display: inline-grid;
+    grid-template-columns: var(--w) 1ch var(--w);
+    align-items: baseline;
+}
+
+/* širine u znakovima (ch = širina “0”) */
+.dual-odds {
+    --w: 5ch;
+}
+/* 2 znamenke + '.' + 2 decimale */
+.dual-prob {
+    --w: 6ch;
+}
+/* 3 znamenke + '.' + 2 decimale */
+
+.dual .l {
+    text-align: right;
+}
+
+.dual .r {
+    text-align: left;
+}
+
+/* lagani “buffer” oko crtice, simetrično, bez gap-a */
+.dual .mid {
+    text-align: center;
+    opacity: .85;
+}
+
+.dual .l::after,
+/* figure-space = širina znamenke */
+/* vodeće nule su "nevidljive", ali drže širinu */
+.ghost {
+    visibility: hidden;
+}
+
+/* poravnanje u tim ćelijama */
+/* Odds/Probability ćelije—precizno poravnanje, bez razmakivanja slova */
+.odds-combined-cell,
+.percentage-cell {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    letter-spacing: 0; /* pregazi 0.02em ako je bilo */
+    white-space: nowrap;
+}
+
+/* Tri komada u jednoj liniji: [lijevo] [–] [desno] */
+.dual {
+    display: inline-flex;
+    align-items: baseline;
+}
+
+/* fiksne širine lijevo/desno u znakovima (ch = širina "0") */
+.dual-odds {
+    --w: 5ch;
+}
+/* 2 znamenke + "." + 2 decimale (do 99.99) */
+.dual-prob {
+    --w: 6ch;
+}
+/* 3 znamenke + "." + 2 decimale (do 100.00) */
+
+.dual .l {
+    width: var(--w);
+    text-align: right;
+}
+
+.dual .mid {
+    width: 2ch;
+    text-align: center;
+    opacity: .85;
+}
+/* crtica u sredini */
+.dual .r {
+    width: var(--w);
+    text-align: left;
+}
+
+/* vodeće "0" koje ne želimo vidjeti, ali zadržavaju širinu */
+.ghost {
+    visibility: hidden;
+}
+
+:root {
+    --bb-backdrop: rgba(0,0,0,.5);
+    --bb-modal-bg: #fff;
+    --bb-modal-radius: 16px;
+    --bb-modal-shadow: 0 20px 60px rgba(0,0,0,.25);
+    --bb-modal-maxw: 520px;
+    --bb-gap: 14px;
+    --bb-sep: rgba(0,0,0,.08);
+    --bb-error: #c62828;
+    --bb-success: #1b5e20;
+}
+
+/* spriječi scroll pozadine kad je modal otvoren */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* BACKDROP */
+.bb-backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--bb-backdrop);
+    display: grid;
+    place-items: center;
+    z-index: 9999; /* iznad headera i svega */
+}
+
+/* MODAL */
+.bb-modal {
+    position: relative;
+    background: var(--bb-modal-bg);
+    border-radius: var(--bb-modal-radius);
+    box-shadow: var(--bb-modal-shadow);
+    width: min(92vw, var(--bb-modal-maxw));
+    max-height: min(86vh, 900px);
+    overflow: auto;
+    padding: 24px 20px 20px;
+}
+
+/* CLOSE X */
+.bb-modal .close-button {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    border: 0;
+    background: transparent;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* FORM layout */
+.bb-modal form {
+    display: grid;
+    gap: var(--bb-gap);
+}
+
+.bb-modal .form-row {
+    display: grid;
+    gap: 8px;
+}
+
+.bb-modal label {
+    font-size: 14px;
+    color: #333;
+}
+
+.bb-modal input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--bb-sep);
+    border-radius: 10px;
+    outline: none;
+}
+
+.bb-modal input:focus {
+    border-color: #666;
+}
+
+.bb-modal input.invalid {
+    border-color: var(--bb-error);
+}
+
+/* password field s eye ikonom */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+/* poruke */
+.error {
+    color: var(--bb-error);
+    font-size: 13px;
+    margin: 0;
+}
+
+.success {
+    color: var(--bb-success);
+    font-size: 13px;
+    margin: 0;
+}
+
+.error-placeholder {
+    min-height: 18px;
+}
+/* da ne skakuće layout */
+.invisible {
+    visibility: hidden;
+}
+
+/* gumbe držimo jednostavne */
+.bb-modal button[type="submit"] {
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 10px;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+}
+
+.bb-modal button[type="submit"]:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+/* pomoćni */
+.text-center {
+    text-align: center;
+}
+
+.oauth-inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.link-button {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.sep {
+    opacity: .4;
+}
+
+/* ------- Filter Modal compact layout ------- */
+.filter-modal .hr {
+    border-top: 1px solid var(--bb-sep);
+    margin: 12px 0;
+}
+
+.filter-modal .section {
+    display: grid;
+    gap: 8px;
+}
+
+.filter-modal .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.filter-modal .title-actions .link-button.small {
+    font-size: 12px;
+}
+
+.filter-modal .segmented-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-modal .seg-item input,
+.filter-modal .chip input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+}
+
+.filter-modal .seg-item span {
+    display: inline-block;
+    padding: 6px 10px;
+    border: 1px solid var(--bb-sep);
+    border-radius: 9999px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.filter-modal .seg-item input:checked + span {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+.filter-modal .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+@media (max-width: 640px) {
+    .filter-modal .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.filter-modal .field {
+    display: grid;
+    gap: 4px;
+}
+
+.filter-modal .chip-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.filter-modal .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-modal .chip input {
+    display: none;
+}
+
+.filter-modal .chip span {
+    display: block;
+    text-align: center;
+    padding: 6px 10px;
+    border: 1px solid var(--bb-sep);
+    border-radius: 9999px;
+    cursor: pointer;
+}
+
+.filter-modal .chip input:checked + span {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+/* dorađeni footeri */
+.filter-modal .actions {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 6px;
+}
+
+.inline-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999
+}
+
+.inline-card {
+    background: #fff;
+    border-radius: 12px;
+    min-width: 280px;
+    max-width: 720px;
+    width: 92vw;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25)
+}
+
+.inline-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee
+}
+
+.inline-card-header .title {
+    font-weight: 600
+}
+
+.inline-close {
+    border: 0;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: .7
+}
+
+.inline-close:hover {
+    opacity: 1
+}
+
+.inline-card-body {
+    padding: 12px 14px
+}
+
+.inline-card-body .row {
+    display: flex;
+    gap: 8px;
+    margin: 6px 0
+}
+
+.inline-card-body .label {
+    min-width: 96px;
+    color: #666
+}
+
+.inline-card-body .value {
+    font-weight: 500
+}
+
+.bb-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999
+}
+
+.bb-modal {
+    background: #fff;
+    border-radius: 12px;
+    min-width: 280px;
+    max-width: 720px;
+    width: 92vw;
+    box-shadow: 0 12px 36px rgba(0,0,0,.28)
+}
+
+.bb-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee
+}
+
+.bb-modal__title {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.05rem
+}
+
+.bb-modal__close {
+    border: 0;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: .7
+}
+
+.bb-modal__close:hover {
+    opacity: 1
+}
+
+.bb-modal__body {
+    padding: 14px 16px
+}
+
+.bb-row {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0
+}
+
+.bb-label {
+    min-width: 110px;
+    color: #666
+}
+
+.bb-value {
+    font-weight: 500
+}
+
+body.bb-nosrcroll {
+    overflow: hidden
+}
+
+.bb-summary {
+    margin-bottom: 8px
+}
+
+.bb-summary__title {
+    font-weight: 600;
+    margin-bottom: 6px
+}
+
+.bb-summary__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+    gap: 8px
+}
+
+.bb-chip {
+    background: #f6f7f9;
+    border: 1px solid #eee;
+    border-radius: 999px;
+    padding: 6px 10px;
+    display: flex;
+    gap: 6px;
+    align-items: center
+}
+
+.bb-chip__label {
+    color: #666;
+    font-size: .9rem
+}
+
+.bb-chip__value {
+    font-weight: 600
+}
+
+.bb-hint {
+    font-size: .9rem;
+    color: #666;
+    margin-bottom: 6px
+}
+
+.bb-hint--warn {
+    color: #b14
+}

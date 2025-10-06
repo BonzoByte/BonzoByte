@@ -1,0 +1,128 @@
+<div class="bb-backdrop" appAccessibleClick (accessibleClick)="close()" aria-hidden="true">
+    <!-- širi malo modal samo za ovaj slučaj -->
+    <div class="bb-modal filter-modal"
+         style="--bb-modal-maxw: 720px;"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="filter-title"
+         appTrapFocus
+         [onEscape]="close"
+         (click)="$event.stopPropagation()">
+
+        <button class="close-button" appAccessibleClick (accessibleClick)="close()" aria-label="Close">&times;</button>
+
+        <h4 id="filter-title" class="text-center">Filter Matches</h4>
+
+        <!-- DATE -->
+        <div class="section">
+            <div class="section-title">
+                <span>Filter by Date:</span>
+            </div>
+
+            <div class="segmented-wrap">
+                <label class="seg-item" *ngFor="let option of dateOptions">
+                    <input type="radio"
+                           [value]="option.value"
+                           name="dateFilter"
+                           [(ngModel)]="selectedDateOption"
+                           (change)="onDateOptionChange()"
+                           (click)="onForceOptionChange(option.value)" />
+                    <span>{{ option.label }}</span>
+                </label>
+            </div>
+
+            <div class="grid-2" *ngIf="selectedDateOption === 'custom'">
+                <div class="field">
+                    <label for="fromDate">From</label>
+                    <input id="fromDate" type="date"
+                           [(ngModel)]="customFromDate"
+                           [attr.min]="minDate | date:'yyyy-MM-dd'"
+                           [attr.max]="maxDate | date:'yyyy-MM-dd'" />
+                </div>
+                <div class="field">
+                    <label for="toDate">To</label>
+                    <input id="toDate" type="date"
+                           [(ngModel)]="customToDate"
+                           [attr.min]="minDate | date:'yyyy-MM-dd'"
+                           [attr.max]="maxDate | date:'yyyy-MM-dd'" />
+                </div>
+            </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <!-- SURFACE -->
+        <div class="section">
+            <div class="section-title">
+                <span>Filter by Surface:</span>
+                <div class="title-actions">
+                    <button class="link-button small" (click)="selectAllSurfaces()">All</button>
+                    <span class="sep">·</span>
+                    <button class="link-button small" (click)="clearSurfaces()">None</button>
+                </div>
+            </div>
+
+            <div class="chip-grid">
+                <label class="chip" *ngFor="let s of surfaces">
+                    <input type="checkbox"
+                           [checked]="selectedSurfaceIds.includes(s._id)"
+                           (change)="toggleSurface(s._id)" />
+                    <span>{{ s.surface }}</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <!-- TOURNAMENT TYPE -->
+        <div class="section">
+            <div class="section-title">
+                <span>Filter by Tournament Type:</span>
+                <div class="title-actions">
+                    <button class="link-button small" (click)="selectAllTypes()">All</button>
+                    <span class="sep">·</span>
+                    <button class="link-button small" (click)="clearTypes()">None</button>
+                </div>
+            </div>
+
+            <div class="chip-row">
+                <label class="chip" *ngFor="let t of tournamentTypes">
+                    <input type="checkbox"
+                           [checked]="selectedTournamentTypeIds.includes(t._id)"
+                           (change)="toggleTournamentType(t._id)" />
+                    <span>{{ t.type }}</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <!-- TOURNAMENT LEVEL -->
+        <div class="section">
+            <div class="section-title">
+                <span>Filter by Tournament Level:</span>
+                <div class="title-actions">
+                    <button class="link-button small" (click)="selectAllLevels()">All</button>
+                    <span class="sep">·</span>
+                    <button class="link-button small" (click)="clearLevels()">None</button>
+                </div>
+            </div>
+
+            <div class="chip-grid">
+                <label class="chip" *ngFor="let t of tournamentLevels">
+                    <input type="checkbox"
+                           [checked]="selectedTournamentLevelIds.includes(t._id)"
+                           (change)="toggleTournamentLevel(t._id)" />
+                    <span>{{ t.level }}</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="actions">
+            <button class="link-button" (click)="apply()">Apply</button>
+            <button class="link-button" (click)="reset()">Reset</button>
+        </div>
+    </div>
+</div>

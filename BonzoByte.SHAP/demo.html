@@ -1,0 +1,74 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Sticky demo</title>
+<style>
+  :root{
+    --header-h: 40px;
+    --datebar-h: 36px;
+    --top-offset: calc(var(--header-h) + var(--datebar-h));
+  }
+
+  html,body { margin:0; font-family: system-ui, Arial, sans-serif; }
+  body { padding-top: var(--top-offset); } /* rezervacija za oba bara */
+
+  /* HEADER – stalno gore */
+  .custom-header{
+    position: fixed; top:0; left:0; right:0;
+    height: var(--header-h);
+    z-index: 1000; display:grid; place-items:center;
+    background:#fff; border-bottom:1px solid #e5e5e5;
+  }
+
+  /* DATE BAR – stalno odmah ispod headera, jedna linija, centar */
+  .date-nav-sticky{
+    position: fixed; top: var(--header-h); left:0; right:0;
+    min-height: var(--datebar-h);
+    z-index: 990; background:#fff; border-bottom:1px solid #eee;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    white-space: nowrap; padding:6px 10px;
+  }
+
+  /* WRAPPER – ne smije biti sticky/flex; smije imati samo X-scroll */
+  .table-wrapper{ overflow-x:auto; overflow-y:visible; }
+
+  /* TABLICA – "sticky friendly": no collapse + center */
+  table { border-collapse: separate; border-spacing:0; width:max-content; margin:0 auto; }
+  th, td { padding:6px 10px; border-bottom:1px solid #eee; }
+
+  /* THEAD – stvarno sticky ispod date bara
+     trik: pošto je body već odmaknut za oba bara, top:0 je točno ispod date bara */
+  thead th{
+    position: sticky; top: 0;
+    background:#fff; z-index: 5;
+    box-shadow: 0 1px 0 rgba(0,0,0,.08);
+  }
+</style>
+
+<header class="custom-header">Bonzo Byte</header>
+
+<div class="date-nav-sticky">
+  ← <input type="date" value="2024-04-24"> → | <a href="#">Filter</a>
+</div>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th><th>Type</th><th>Tournament</th><th>Level</th><th>Surface</th>
+        <th>Player 1</th><th>Player 2</th><th>Result</th><th>Result Details</th><th>Odds</th><th>Probability</th><th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- samo da ima što skrolati -->
+      <script>
+        for(let i=0;i<120;i++){
+          document.write(`<tr>
+            <td>24.04.2024 10:${(i%60).toString().padStart(2,'0')}</td>
+            <td>ATP</td><td>Angers</td><td>&lt;50K</td><td>clay</td>
+            <td>Player A</td><td>Player B</td><td>2:0</td><td>64 63</td><td>1.45 - 2.7</td><td>72% - 28%</td><td>Details</td>
+          </tr>`);
+        }
+      </script>
+    </tbody>
+  </table>
+</div>

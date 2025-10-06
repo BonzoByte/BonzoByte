@@ -1,0 +1,173 @@
+<div class="matches-page-wrapper main-scroll">
+    <!-- Loading Overlay -->
+    <div *ngIf="loading" class="loading-overlay">
+        <div class="spinner-wrapper">
+            <div class="spinner-border text-light" role="status"></div>
+            <p class="text-white mt-3">Loading...</p>
+        </div>
+    </div>
+
+    <div class="date-nav-sticky">
+        <div class="date-left"></div>
+        <div class="pagination-center-wrapper">
+            <button (click)="previousDay()" class="link-button" [disabled]="isPrevDisabled">
+                <img src="assets/icons/left.svg" alt="Previous" class="arrow-icon" />
+            </button>
+
+            <input #dateInput
+                   type="date"
+                   class="custom-date-input"
+                   [value]="currentDateString"
+                   (change)="onDateInputChanged($event)"
+                   [disabled]="matches.length === 0 || (isFiltered && filteredAvailableDates.length === 0)" />
+
+            <button (click)="nextDay()" class="link-button" [disabled]="isNextDisabled">
+                <img src="assets/icons/right.svg" alt="Next" class="arrow-icon" />
+            </button>
+        </div>
+
+        <div class="date-right">
+            <button (click)="openFilterModal()" class="link-button">
+                <img src="assets/icons/filter.svg" alt="Filter" class="icon icon-filter" />
+                Filter <span *ngIf="isFiltered" class="badge-on">●</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Match Table -->
+    <div class="table-wrapper">
+        <div *ngIf="matches.length === 0 && isFiltered"
+             class="text-center mt-3 p-3 rounded border"
+             style="background-color: #f8f9fa; color: #6c757d;">
+            No matches found for the selected filters.<br />
+            Please adjust your filter options or clear the filters to continue browsing.
+        </div>
+
+        <table class="match-table" *ngIf="matches.length > 0">
+            <thead>
+                <tr>
+                    <th (click)="toggleSort('date')">
+                        Date
+                        <span *ngIf="sortField === 'date'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                    </th>
+                    <th>Type</th>
+                    <th (click)="toggleSort('tournament')">
+                        Tournament
+                        <span *ngIf="sortField === 'tournament'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                    </th>
+                    <th>Level</th>
+                    <th>Surface</th>
+                    <th>Player 1</th>
+                    <th>Player 2</th>
+                    <th>Result</th>
+                    <th>Result Details</th>
+                    <th>Odds</th>
+                    <th>Probability</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let match of matches">
+                    <td>{{ getLocalizedDateTime(match.dateTime) }}</td>
+                    <td>{{ match.tournamentTypeName }}</td>
+
+                    <td>
+                        <span class="fi fi-{{ flagCode(match.tournamentEventCountryISO2).toLowerCase() }}"
+                              [title]="match.tournamentEventCountryISO2 || 'World'"></span>
+                        <span class="clickable-text" (click)="openTournamentModal(match.tournamentEventTPId)">
+                            {{cleanTournamentNameFront(decodeHtmlEntities(match.tournamentEventName || '')) }}
+                        </span>
+                    </td>
+
+                    <td>{{ match.tournamentLevelName }}</td>
+                    <td>{{ match.surface }}</td>
+
+                    <td>
+                        <span class="fi fi-{{ flagCode(match.player1CountryISO2).toLowerCase() }}"
+                              [title]="match.player1CountryISO2 || 'World'"></span>
+                        <span class="clickable-text" (click)="openPlayerModal(match.player1TPId)">
+                            {{ match.player1Label || decodeHtmlEntities(match.player1Name || '') }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="fi fi-{{ flagCode(match.player2CountryISO2).toLowerCase() }}"
+                              [title]="match.player2CountryISO2 || 'World'"></span>
+                        <span class="clickable-text" (click)="openPlayerModal(match.player2TPId)">
+                            {{ match.player2Label || decodeHtmlEntities(match.player2Name || '') }}
+                        </span>
+                    </td>
+
+                    <!-- Backend već vraća s dvotočkama; fallback na lokalni helper (NE koristimo resultRaw/*) -->
+                    <td>{{ formatResult(match.result) }}</td>
+                    <td>{{ formatResultDetails(match.resultDetails) }}</td>
+
+                    <!-- Prazno kad nema obje kvote -->
+                    <td class="odds-combined-cell" [innerHTML]="formatOddsHTML(match.oddsText)"></td>
+
+                    <!-- Poravnato: monospaced -->
+                    <td class="odds-combined-cell percentage-cell" [innerHTML]="formatProbHTML(match.probabilityText)"></td>
+
+                    <td>
+                        <small (click)="openMatchModal(match)">Details</small>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Filter Modal -->
+        <app-match-filter-modal *ngIf="showFilterModal"
+                                [activeDateFilter]="activeDateFilter"
+                                [activeFromDate]="activeFromDate"
+                                [activeToDate]="activeToDate"
+                                (closed)="closeFilterModal()"
+                                [minDate]="minDate"
+                                [maxDate]="maxDate"
+                                [activeSurfaceIds]="activeSurfaceIds"
+                                [activeTournamentTypeIds]="activeTournamentTypeIds"
+                                [activeTournamentLevelIds]="activeTournamentLevelIds"
+                                (filterApplied)="onFilterApplied($event)"
+                                (resetFilter)="onFilterReset()"></app-match-filter-modal>
+
+        <app-match-details-modal *ngIf="selectedMatch"
+                                 [match]="selectedMatch"
+                                 (closed)="closeMatchModal()">
+        </app-match-details-modal>
+
+        <div *ngIf="showDateWarning" class="modal-custom" (click)="closeDateWarningModal()">
+            <div class="modal-header justify-content-center" (click)="$event.stopPropagation()">
+                <h5 class="modal-title text-center w-100">Date Adjusted</h5>
+            </div>
+            <div class="modal-body" (click)="$event.stopPropagation()">
+                <p>
+                    No matches are available outside the allowed range.
+                    <br />
+                    Allowed date range: <strong>{{ minDate | date: 'yyyy-MM-dd' }}</strong> to
+                    <strong>{{ maxDate | date:'yyyy-MM-dd' }}</strong>.
+                </p>
+                <hr />
+                <div class="text-end">
+                    <button class="btn btn-outline-secondary btn-sm" (click)="closeDateWarningModal()">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="showOutOfRangeModal" class="modal-custom">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title text-center w-100">Invalid Date</h5>
+            </div>
+            <div class="modal-body">
+                <p>
+                    The selected date is outside your active filter range.<br />
+                    Please adjust your filter settings or clear the filter.
+                </p>
+                <hr />
+                <div class="text-end">
+                    <button class="btn btn-outline-secondary btn-sm" (click)="showOutOfRangeModal = false">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

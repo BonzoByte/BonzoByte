@@ -1,0 +1,74 @@
+<div class="bb-backdrop" appAccessibleClick (accessibleClick)="close()" aria-hidden="true">
+    <div class="bb-modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="user-modal-title"
+         appTrapFocus
+         [onEscape]="close"
+         (click)="$event.stopPropagation()">
+
+        <button class="close-button" appAccessibleClick (accessibleClick)="close()" aria-label="Close">&times;</button>
+
+        <h4 id="user-modal-title" class="text-center">User data</h4>
+
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" autocomplete="off">
+            <div class="form-row">
+                <label for="email">Email</label>
+                <input id="email" type="email" formControlName="email" readonly autocomplete="email" />
+            </div>
+
+            <div class="form-row">
+                <label for="nickname">Username (nickname)</label>
+                <input id="nickname" formControlName="nickname" autocomplete="username" />
+                <p class="error" *ngIf="userForm.controls['nickname']?.errors?.['nicknameTaken']">
+                    That username is already taken
+                </p>
+            </div>
+
+            <div class="form-row">
+                <label>Avatar</label>
+                <div class="password-wrapper" style="position:static">
+                    <div class="avatar-container" style="display:flex;align-items:center;gap:12px;">
+                        <img [src]="previewUrl || currentUser!.avatarUrl || 'assets/images/defaultUser.png'"
+                             alt="Avatar preview"
+                             class="avatar-preview"
+                             style="width:64px;height:64px;border-radius:50%;object-fit:cover;"
+                             (error)="onAvatarError($event)" />
+
+                        <div class="avatar-actions" style="display:flex;gap:12px;align-items:center;">
+                            <button type="button"
+                                    class="link-button"
+                                    appAccessibleClick
+                                    (accessibleClick)="fileInput.click()"
+                                    title="Select a new image (max 2MB, JPG/PNG/WebP)">
+                                Change avatar
+                            </button>
+
+                            <input type="file"
+                                   #fileInput
+                                   hidden
+                                   (change)="onFileSelected($event)"
+                                   accept="image/jpeg,image/png,image/webp"
+                                   aria-label="Select avatar image" />
+
+                            <button *ngIf="isLocalAccount"
+                                    type="button"
+                                    class="link-button"
+                                    appAccessibleClick
+                                    (accessibleClick)="changePassword()">
+                                Change password
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center" style="margin-top:8px;">
+                <button type="submit" [disabled]="userForm.invalid || userForm.pristine || userForm.pending">Save</button>
+            </div>
+
+            <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+            <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        </form>
+    </div>
+</div>

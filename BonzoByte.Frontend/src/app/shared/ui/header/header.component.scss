@@ -1,0 +1,44 @@
+﻿/* Komponenta kao blok (samo sigurnost) */
+:host {
+    display: block;
+}
+
+.custom-header {
+    min-height: var(--header-h);
+}
+
+.custom-header > div {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px;
+    min-height: var(--header-h);
+    min-width: 0;
+}
+
+.custom-header > div .navbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.custom-header > div .navbar-nav:first-of-type {
+    justify-self: start;
+}
+
+.custom-header > div .brand-title {
+    justify-self: center;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.custom-header > div .brand-title .main-title {
+    margin: 0;
+}
+
+.custom-header > div .navbar-nav:last-of-type {
+    justify-self: end;
+}

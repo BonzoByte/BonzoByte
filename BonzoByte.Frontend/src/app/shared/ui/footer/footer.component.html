@@ -1,0 +1,36 @@
+<footer class="custom-footer">
+    <div class="footer-left">
+        <button type="button" class="footer-link" (click)="openAbout()">About Us</button>
+    </div>
+
+    <div class="footer-center">
+        <button type="button" class="footer-link" (click)="openContact()">Contact Us</button>
+    </div>
+
+    <div class="footer-right">
+        <span>&copy; 2025 BonzoByte</span>
+    </div>
+</footer>
+
+<!-- ABOUT MODAL -->
+<div *ngIf="showAbout" class="bb-backdrop" appAccessibleClick (accessibleClick)="closeAbout()" aria-hidden="true">
+    <div class="bb-modal"
+         role="dialog" aria-modal="true" aria-labelledby="about-title"
+         appTrapFocus [onEscape]="closeAbout"
+         (click)="$event.stopPropagation()">
+        <button class="close-button" appAccessibleClick (accessibleClick)="closeAbout()" aria-label="Close">×</button>
+        <h4 id="about-title">About BonzoByte</h4>
+        <p>
+            Hobi-projekt: tenis + podaci + inženjering. Više uskoro.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor,
+            dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa,
+            varius a, semper congue, euismod non, mi.
+        </p>
+        <div class="text-center" style="margin-top:12px">
+            <button type="button" (click)="closeAbout()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- CONTACT MODAL -->
+<app-contact-modal *ngIf="showContact" (closed)="closeContact()"></app-contact-modal>

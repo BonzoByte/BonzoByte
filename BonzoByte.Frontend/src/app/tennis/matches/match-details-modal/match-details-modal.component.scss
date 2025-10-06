@@ -1,0 +1,344 @@
+﻿/* HOST = cijeli overlay, uvijek preko svih elemenata */
+:host {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+}
+
+/* poluprozirna pozadina + centriranje kartice */
+.mdc-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* kartica */
+.mdc {
+    width: min(900px, 96vw);
+    max-height: 90vh;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 18px 60px rgba(0,0,0,.35);
+    display: grid;
+    grid-template-rows: auto auto 1fr; /* header, tabs, body */
+    overflow: hidden;
+}
+
+/* sticky header + tabs + body scroll */
+.mdc__header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.mdc__header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.icon-btn {
+    border: 0;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: .7;
+}
+
+.icon-btn:hover {
+    opacity: 1;
+}
+
+.tabs {
+    position: sticky;
+    top: 48px;
+    z-index: 1;
+    display: flex;
+    gap: 6px;
+    padding: 8px 10px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.tabs button {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.tabs button.active {
+    background: #e9eefb;
+    border-color: #cdd7f6;
+}
+
+.mdc__body {
+    overflow: auto;
+    padding: 12px 14px 16px;
+}
+
+/* ===== MatchDetailsModal — clean reset (scoped) ===== */
+:host {
+    display: block;
+}
+
+.mdc { /* container koji već imaš */
+    display: block;
+}
+
+/* Kill-switch za stare “pills/summary” ako su kojim slučajem još u DOM-u */
+.mdc .bb-summary,
+.mdc .bb-chip,
+.mdc .bb-hint {
+    display: none !important;
+}
+
+/* --- Clean summary layout --- */
+.summary.clean {
+    display: grid;
+    gap: 14px;
+}
+
+.summary.clean .s-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.summary.clean .s-title .line {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 700;
+}
+
+.summary.clean .s-title .vs {
+    margin: 0 8px;
+    color: #888;
+    font-weight: 600;
+}
+
+.summary.clean .s-title .dl {
+    font-size: .9rem;
+    opacity: .85;
+    text-decoration: none;
+}
+
+.summary.clean .s-title .dl:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Punchline */
+.summary.clean .punch {
+    display: grid;
+    gap: 10px;
+}
+
+.summary.clean .punch .fav .pct {
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.summary.clean .punch .fav .who {
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.summary.clean .punch .fav .sub {
+    color: #666;
+    font-size: .9rem;
+}
+
+.summary.clean .punch .fav .pct.p1 {
+    color: #0b8;
+}
+
+.summary.clean .punch .fav .pct.p2 {
+    color: #248;
+}
+
+.summary.clean .punch .fav.muted {
+    color: #888;
+}
+
+/* Win-prob bar */
+.summary.clean .bar-wrap .bar {
+    display: flex;
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #eee;
+}
+
+.summary.clean .bar-wrap .bar .p1 {
+    background: #0b8;
+}
+
+.summary.clean .bar-wrap .bar .p2 {
+    background: #248;
+}
+
+.summary.clean .bar-wrap .bar-lbls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: .95rem;
+}
+
+/* Facts grid */
+.summary.clean .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+    gap: 8px 14px;
+}
+
+.summary.clean .facts .f {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 8px;
+    align-items: baseline;
+}
+
+.summary.clean .facts .k {
+    color: #666;
+}
+
+.summary.clean .facts .v {
+    font-weight: 600;
+}
+
+.summary.clean .facts .v.mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+}
+
+.summary.clean .facts .v.pos {
+    color: #0b8;
+}
+
+.summary.clean .facts .v.neg {
+    color: #b14;
+}
+
+.summary.clean .facts .v.ok {
+    color: #0b8;
+}
+
+.summary.clean .facts .v.bad {
+    color: #444;
+}
+
+/* CTA */
+.summary.clean .cta {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.summary.clean .cta .btn {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+}
+
+.summary.clean .cta .btn:hover {
+    background: #f0f0f0;
+}
+
+/* === Overlay + modal card === */
+.mdc-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.mdc {
+    width: min(900px, 96vw);
+    max-height: 90vh;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 18px 60px rgba(0,0,0,.35);
+    display: grid;
+    grid-template-rows: auto auto 1fr; /* header, tabs, body */
+    overflow: hidden; /* za sticky header */
+}
+
+/* Sticky header + tabs */
+.mdc__header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.mdc__header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.icon-btn {
+    border: 0;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: .7;
+}
+
+.icon-btn:hover {
+    opacity: 1;
+}
+
+.tabs {
+    position: sticky;
+    top: 48px;
+    z-index: 1; /* otprilike visina headera */
+    display: flex;
+    gap: 6px;
+    padding: 8px 10px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.tabs button {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.tabs button.active {
+    background: #e9eefb;
+    border-color: #cdd7f6;
+}
+
+.mdc__body {
+    overflow: auto; /* unutarnji scroll */
+    padding: 12px 14px 16px;
+}
+
+/* (ostatak: naš “clean summary” stilovi koje već imaš — ostavi) */

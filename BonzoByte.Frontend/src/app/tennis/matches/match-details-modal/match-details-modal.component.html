@@ -1,0 +1,121 @@
+﻿<!-- OVERLAY (klik izvan kartice = close) -->
+<div class="mdc-overlay" (click)="close()">
+    <!-- KARTICA (klik unutar = stop) -->
+    <div class="mdc" role="dialog" aria-modal="true" aria-labelledby="matchDetailsTitle" (click)="$event.stopPropagation()">
+
+        <div class="mdc__header">
+            <h2 id="matchDetailsTitle">Match Details</h2>
+            <button class="icon-btn" type="button" (click)="close()" aria-label="Close">×</button>
+        </div>
+
+        <!-- Tabs -->
+        <nav class="tabs" aria-label="Match Details Tabs">
+            <button [class.active]="activeTab==='summary'" (click)="activeTab='summary'">Summary</button>
+            <button [class.active]="activeTab==='stats'" (click)="activeTab='stats'">Stats</button>
+            <button [class.active]="activeTab==='ts'" (click)="activeTab='ts'">TS Breakdown</button>
+            <button [class.active]="activeTab==='wp'" (click)="activeTab='wp'">Win Probability</button>
+            <button [class.active]="activeTab==='h2h'" (click)="activeTab='h2h'">H2H</button>
+        </nav>
+
+        <div class="mdc__body" *ngIf="!loading; else loadingTpl">
+            <!-- === TVOJ CLEAN SUMMARY (bez promjena) === -->
+            <section *ngIf="activeTab==='summary'" class="summary clean">
+                <header class="s-title" title="{{ p1Name }} vs {{ p2Name }}">
+                    <div class="line">
+                        <span class="p1">{{ p1Name }}</span>
+                        <span class="vs">vs</span>
+                        <span class="p2">{{ p2Name }}</span>
+                    </div>
+                    <a *ngIf="downloadUrl as dl" [href]="dl" target="_blank" rel="noopener" class="dl">Download JSON</a>
+                </header>
+
+                <div class="punch">
+                    <ng-container *ngIf="favorite as fav; else noProbTpl">
+                        <div class="fav">
+                            <div class="pct" [class.p1]="fav.who===1" [class.p2]="fav.who===2">{{ fav.probPct }}%</div>
+                            <div class="who">{{ fav.name }}</div>
+                            <div class="sub">NN win probability</div>
+                        </div>
+                    </ng-container>
+                    <ng-template #noProbTpl>
+                        <div class="fav muted">NN probability unavailable</div>
+                    </ng-template>
+
+                    <div class="bar-wrap" *ngIf="nn as probs">
+                        <div class="bar" aria-label="Win probability">
+                            <div class="p1" [style.width.%]="probs.p1 * 100"></div>
+                            <div class="p2" [style.width.%]="probs.p2 * 100"></div>
+                        </div>
+                        <div class="bar-lbls">
+                            <div class="side p1"><strong>{{ (probs.p1 * 100) | number:'1.0-0' }}%</strong> {{ p1Name }}</div>
+                            <div class="side p2">{{ p2Name }} <strong>{{ (probs.p2 * 100) | number:'1.0-0' }}%</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="facts">
+                    <div class="f"><span class="k">Tournament</span><span class="v">{{ tournamentName }}</span></div>
+                    <div class="f">
+                        <span class="k">Date</span>
+                        <span class="v"><time [attr.datetime]="dateTimeISO">{{ dateTimeISO | date:'medium' }}</time></span>
+                    </div>
+                    <div class="f"><span class="k">Surface</span><span class="v">{{ surface || '—' }}</span></div>
+                    <div class="f">
+                        <span class="k">Status</span>
+                        <span class="v" [class.ok]="statusLabel==='Scheduled'" [class.bad]="statusLabel==='Finished'">{{ statusLabel }}</span>
+                    </div>
+                    <div class="f" *ngIf="result">
+                        <span class="k">Result</span>
+                        <span class="v">{{ result }}<ng-container *ngIf="resultDetails"> — {{ resultDetails }}</ng-container></span>
+                    </div>
+                    <div class="f" *ngIf="match?.oddsText">
+                        <span class="k">Odds</span><span class="v mono">{{ match.oddsText }}</span>
+                    </div>
+                    <div class="f" *ngIf="tsEdge as e">
+                        <span class="k">TS μ edge</span>
+                        <span class="v" [class.pos]="e.delta>0" [class.neg]="e.delta<0">
+                            {{ e.delta | number:'1.0-1' }}
+                            <ng-container *ngIf="e.who===1"> for {{ p1Name }}</ng-container>
+                            <ng-container *ngIf="e.who===2"> for {{ p2Name }}</ng-container>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="cta">
+                    <button class="btn" (click)="activeTab='stats'">Stats</button>
+                    <button class="btn" (click)="activeTab='ts'">TS</button>
+                    <button class="btn" (click)="activeTab='wp'">Win Prob</button>
+                </div>
+            </section>
+
+            <!-- ostali tabovi -->
+            <section *ngIf="activeTab==='stats'" class="placeholder">
+                <h3>Stats</h3>
+                <p>Performance, Set, Game, Expectation — coming next.</p>
+            </section>
+
+            <section *ngIf="activeTab==='ts'" class="placeholder">
+                <h3>TrueSkill Breakdown</h3>
+                <p>Time-series chart with model/surface toggles — coming next.</p>
+            </section>
+
+            <section *ngIf="activeTab==='wp'" class="placeholder">
+                <h3>Win Probability Breakdown</h3>
+                <p>TS-derived WP timeline + NN chip — coming next.</p>
+            </section>
+
+            <section *ngIf="activeTab==='h2h'" class="placeholder">
+                <h3>H2H</h3>
+                <p>Mini summary + surface splits — coming next.</p>
+            </section>
+        </div>
+
+        <ng-template #loadingTpl>
+            <div class="loading">
+                <div class="spinner" aria-hidden="true"></div>
+                <div>Loading match details…</div>
+            </div>
+        </ng-template>
+
+    </div>
+</div>
