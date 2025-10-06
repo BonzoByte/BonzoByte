@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -37,7 +36,7 @@ jobs:
         working-directory: BonzoByte.Frontend
         run: npm ci
 
-      # Ako build traži ime projekta, zamijeni naredbu ispod sa:
+      # Ako build traži ime projekta, promijeni naredbu ispod u:
       # npx ng build BonzoByte.Frontend --configuration production --base-href "/BonzoByte/" --deploy-url "/BonzoByte/" --output-path dist/site
       - name: Build Angular
         working-directory: BonzoByte.Frontend
