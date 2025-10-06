@@ -13,7 +13,6 @@ import { MulterError } from 'multer';
 
 import { env, corsAllowlist } from './config/env.js';
 import connectDB from './config/db.js';
-import './config/passport.js';
 
 import countryRoutes from './routes/country.routes.js';
 import playsRoutes from './routes/plays.routes.js';
@@ -27,32 +26,32 @@ import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
 import archivesRoutes from './routes/archives.routes.js';
 
+const ARCHIVES_ONLY = String(process.env.ARCHIVES_ONLY || '').toLowerCase() === 'true';
+
 const app = express();
 app.set('trust proxy', 1);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/* ----------------------------- C O R S  ----------------------------- */
-// ⚠️ CORS MORA BITI ispred SVIH ruta i većine middlewara
+/* ----------------------------- C O R S ------------------------------ */
 const corsOptions = {
     origin(origin, cb) {
         const ok = !origin || corsAllowlist.includes(origin);
         cb(ok ? null : new Error('Not allowed by CORS'), ok);
     },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],   // 👈 PATCH dodan
-    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'], // 👈 Authorization
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
     credentials: true,
     optionsSuccessStatus: 204,
 };
 app.use(cors(corsOptions));
-// Preflight za sve rute
 app.options(/.*/, cors(corsOptions));
 
 /* --------------------------- Core middleware ------------------------ */
 app.use(helmet({
-    crossOriginResourcePolicy: { policy: 'cross-origin' }, // 👈 dopusti embed s 4200
-    crossOriginEmbedderPolicy: false,                      // 👈 ne traži COEP u devu
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginEmbedderPolicy: false,
 }));
 app.use(compression());
 app.use(morgan('dev'));
@@ -60,7 +59,6 @@ app.use(json({ limit: '1mb' }));
 app.use(urlencoded({ extended: true }));
 
 /* --------------------------- Rate limiting -------------------------- */
-// Ne brojaj preflight; u devu želimo mir
 const skipPreflight = (req) => req.method === 'OPTIONS';
 
 const globalLimiter = rateLimit({
@@ -68,7 +66,7 @@ const globalLimiter = rateLimit({
     max: 1000,
     standardHeaders: true,
     legacyHeaders: false,
-    skip: skipPreflight,          // 👈
+    skip: skipPreflight,
 });
 app.use(globalLimiter);
 
@@ -78,11 +76,17 @@ const authLimiter = rateLimit({
     message: { message: 'Too many auth requests, try again later.' },
     standardHeaders: true,
     legacyHeaders: false,
-    skip: skipPreflight,          // 👈
+    skip: skipPreflight,
 });
 
 /* ----------------------------- Passport ----------------------------- */
 app.use(passport.initialize());
+// Dinamički učitaj strategije samo ako nisu “archives-only”
+if (!ARCHIVES_ONLY) {
+    await import('./config/passport.js');
+} else {
+    console.log('🔕 ARCHIVES_ONLY mode: skipping passport strategies.');
+}
 
 /* ------------------------------ Statics ----------------------------- */
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
@@ -92,34 +96,35 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 }));
 
 /* -------------------------------- Routes ---------------------------- */
-app.use('/api/countries', countryRoutes);
-app.use('/api/plays', playsRoutes);
-app.use('/api/surfaces', surfaceRoutes);
-app.use('/api/tournamentTypes', tournamentTypeRoutes);
-app.use('/api/tournamentLevels', tournamentLevelRoutes);
-app.use('/api/tournamentEvents', tournamentEventRoutes);
-app.use('/api/players', playerRoutes);
-app.use('/api/matches', matchRoutes);
-app.use('/api/auth', authLimiter, authRoutes);
+if (!ARCHIVES_ONLY) {
+    app.use('/api/countries', countryRoutes);
+    app.use('/api/plays', playsRoutes);
+    app.use('/api/surfaces', surfaceRoutes);
+    app.use('/api/tournamentTypes', tournamentTypeRoutes);
+    app.use('/api/tournamentLevels', tournamentLevelRoutes);
+    app.use('/api/tournamentEvents', tournamentEventRoutes);
+    app.use('/api/players', playerRoutes);
+    app.use('/api/matches', matchRoutes);
+    app.use('/api/auth', authLimiter, authRoutes);
+    app.use('/api/users', userRoutes);
+} else {
+    console.log('🟢 ARCHIVES_ONLY: mounting only /api/archives (no DB routes).');
+}
 
-// 👇 FRONTEND gađa /api/users/updateUserProfile → montiramo PLURAL /users
-app.use('/api/users', userRoutes);
+// U oba moda: archives rute su aktivne
 app.use('/api/archives', archivesRoutes);
 
 /* --------------------------- Error handlers ------------------------- */
 app.use((err, req, res, next) => {
-    // Multer upload greške
     if (err instanceof MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
             return res.status(400).json({ message: 'File too large (max 2MB).' });
         }
         return res.status(400).json({ message: `Upload error: ${err.code}` });
     }
-    // CORS greška iz origin callbacka
     if (err && err.message === 'Not allowed by CORS') {
         return res.status(403).json({ message: err.message });
     }
-    // Invalid file type iz fileFiltera
     if (err && err.message === 'INVALID_FILE_TYPE') {
         return res.status(400).json({ message: 'Invalid file type. Allowed: JPG, PNG, WebP.' });
     }
@@ -131,7 +136,12 @@ app.get('/api/health', (_, res) => res.json({ ok: true }));
 app.use((req, res) => res.status(404).json({ message: 'Ruta nije pronađena' }));
 
 /* --------------------------- Start server --------------------------- */
-await connectDB();
+if (!ARCHIVES_ONLY) {
+    await connectDB();
+} else {
+    console.log('🔕 ARCHIVES_ONLY mode: skipping DB connect.');
+}
+
 app.listen(env.PORT, () => console.log(`Server running on :${env.PORT} 🚀`));
 
 process.on('unhandledRejection', e => { console.error(e); process.exit(1); });
