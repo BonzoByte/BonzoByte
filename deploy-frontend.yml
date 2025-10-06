@@ -14,7 +14,7 @@ permissions:
 
 concurrency:
   group: 'pages'
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -25,18 +25,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: 'BonzoByte.Frontend/package-lock.json'  # <— ispravljeno
+
+      # Debug: pokaži strukturu da budemo sigurni u put
+      - name: List repo
+        run: |
+          pwd
+          ls -la
+          echo "---- BonzoByte.Frontend ----"
+          ls -la BonzoByte.Frontend || true
 
       - name: Install deps
         working-directory: BonzoByte.Frontend
         run: npm ci
 
+      # Ako build traži ime projekta, zamijeni naredbu ispod sa:
+      # npx ng build BonzoByte.Frontend --configuration production --base-href "/BonzoByte/" --deploy-url "/BonzoByte/" --output-path dist/site
       - name: Build Angular (project pages)
         working-directory: BonzoByte.Frontend
         run: npx ng build --configuration production --base-href "/BonzoByte/" --deploy-url "/BonzoByte/" --output-path dist/site
-        # Ako build traži ime projekta, koristi:
-        # run: npx ng build BonzoByte.Frontend --configuration production --base-href "/BonzoByte/" --deploy-url "/BonzoByte/" --output-path dist/site
 
       - name: Add 404 fallback
         working-directory: BonzoByte.Frontend

@@ -78,7 +78,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BonzoByte.BrotliNNRefresher
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{D46C6888-AB3E-4427-B965-EE7A25485C0D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{277D3EC8-1FB5-4C7F-BDD0-811ADDAEB159}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{277D3EC8-1FB5-4C7F-BDD0-811ADDAEB159}"
 	ProjectSection(SolutionItems) = preProject
 		deploy-frontend.yml = deploy-frontend.yml
 	EndProjectSection
